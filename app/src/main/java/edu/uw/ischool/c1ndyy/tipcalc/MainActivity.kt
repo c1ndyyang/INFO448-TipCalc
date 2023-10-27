@@ -26,9 +26,11 @@ class MainActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
-                // enable the button when there is text in the EditText
+                //set input to string
                 val input = s.toString()
+                //replace $ so it is not counted
                 val strInput = input.replace("$", "")
+                //check if currency is valid
                 var isValid = isValidCurrencyAmount(strInput)
 
                 amountInput.removeTextChangedListener(this)
@@ -36,12 +38,14 @@ class MainActivity : AppCompatActivity() {
                     if (isValid && strInput.contains(".")) {
                         val decimalPlaces = strInput.split(".")[1]
                         if (decimalPlaces.length > 2 || decimalPlaces.length == 0) {
+                            //if decimal is not correct currency format
                             isValid = false
-                            amountInput.setSelection(strInput.length) // Place the cursor at the end
+                            amountInput.setSelection(strInput.length) //cursor at the end?
                             return
                         }
                     }
 
+                    //set button to validity
                     tipButton.isEnabled = isValid
 
                     if (isValid == false) {
@@ -58,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         })
 
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
-            // update the selected tipPct state
+            // set tip percent value
             tipPercent = when (checkedId) {
                 R.id.tenRadio -> 0.10
                 R.id.fifteenRadio -> 0.15
@@ -80,7 +84,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isValidCurrencyAmount(input: String): Boolean {
-        // Regular expression to match valid currency amounts
         val currencyPattern = """^\d+(\.\d{1,2})?$""".toRegex()
         return currencyPattern.matches(input)
     }
